@@ -17,15 +17,17 @@ public class NettyClient {
         try {
             ChannelFuture future = b.group(group)
                     .channel(NioSocketChannel.class)
+                    //监听channel是否初始化成功
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             System.out.println("channel初始化完成");
                             socketChannel.pipeline().addLast(new MyChannelHandel());
                         }
-                    })//监听channel初始化
-                    .connect("localhost", 8888)//初始化channel,监听连接是否成功
-                    .sync();//一个阻塞方法，直到connect()方法有返回值才会执行结束
+                    })
+                    //初始化channel,监听初始化注册是否成功,如果成功，就尝试与服务器连接
+                    .connect("localhost", 8888)
+                 .sync();//一个阻塞方法，直到future注册失败或连接异常或连接成功才会结束阻塞
 
             future.channel().closeFuture().sync();
 

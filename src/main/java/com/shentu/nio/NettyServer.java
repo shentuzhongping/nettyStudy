@@ -14,7 +14,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 
 public class NettyServer {
 
-    public static ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    public static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     public static void main(String[] args) {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -26,10 +26,10 @@ public class NettyServer {
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                        System.out.println("socketChannel is init");
+                            System.out.println("socketChannel is init");
                             socketChannel.pipeline().addLast(new MyServerChannelHandeler());
-                            channelGroup.add(socketChannel);
-                            System.out.println("当前socketChannel的数量"+channelGroup.size());
+                            channels.add(socketChannel);
+                            System.out.println("当前socketChannel的数量"+channels.size());
                         }
                     })
                     .bind(8888)
